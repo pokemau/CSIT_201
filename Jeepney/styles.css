@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&family=Young+Serif&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-family: "Young Serif", serif;
+
+  background-color: rgb(243, 243, 243);
+}
+
+.title-cont {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.title-cont img {
+  width: 12rem;
+  height: 12rem;
+  border-radius: 100px;
+  margin-left: 1rem;
+}
+
+.main-title {
+  text-align: center;
+  margin: 2rem 0;
+  font-size: 5rem;
+}
+
+#main-body {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.route-title {
+  font-size: 4rem;
+}
+
+.routes-cont {
+  display: flex;
+  margin-bottom: 5rem;
+  /* gap: 2rem; */
+}
+
+.routes-cont p {
+  font-size: 2rem;
+}
+
+.input-cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+label {
+  font-size: 2rem;
+}
+
+#jeepCode {
+  width: 30vw;
+  height: 8vh;
+  font-size: 2rem;
+  /* font-weight: bold; */
+  padding: 0 15px;
+}
+
+#btn {
+  height: 8.5vh;
+  /* padding: 5px; */
+  font-size: 2rem;
+}

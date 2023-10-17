@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- <script src="index.js"></script> -->
+
+    <title>BINGO</title>
+  </head>
+  <body>
+    <div class="first-cont">
+      <h1>Enter your game code here:</h1>
+      <div id="input-cont">
+        <input type="text" name="" id="game-code" value="HEelhJos" />
+        <button id="get-card-btn">GET CARD</button>
+      </div>
+
+      <div id="bingo-title">
+        <div>B</div>
+        <div>I</div>
+        <div>N</div>
+        <div>G</div>
+        <div>O</div>
+      </div>
+
+      <div class="cells-cont">
+        <div class="B cell-col"></div>
+        <div class="I cell-col"></div>
+        <div class="N cell-col"></div>
+        <div class="G cell-col"></div>
+        <div class="O cell-col"></div>
+      </div>
+
+      <div id="card-btns-cont">
+        <button id="check-win-btn" class="control-btn">CHECK CARD</button>
+        <button id="new-card-btn" class="control-btn">NEW CARD</button>
+      </div>
+
+      <div id="new-game-btn" class="control-btn">OPEN DASHBOARD</div>
+    </div>
+  </body>
+
+  <script>
+    $(document).ready(function () {
+      let inputCode;
+      let playerToken;
+
+      $("#new-game-btn").click(() => {
+        window.open(`http://www.hyeumine.com/bingodashboard.php`, "_blank");
+      });
+
+      $("#get-card-btn").click(() => {
+        inputCode = $("#game-code").val();
+        if (inputCode) {
+          getInputVal();
+          // $("#bingo-title").css("display", "flex");
+        }
+      });
+
+      // TEST
+      $(document).on("click", ".cell", function (e) {
+        e.currentTarget.classList.toggle("active-cell");
+      });
+
+      $("#check-win-btn").click(() => {
+        const CHECK_WIN_URL = "http://www.hyeumine.com/checkwin.php?";
+
+        // TODO check if game code is changed
+        if (inputCode != $("#game-code").val()) {
+          alert("INVALID GAME CODE!");
+          return;
+        }
+
+        $.ajax({
+          url: `${CHECK_WIN_URL}playcard_token=${playerToken}`,
+          method: "POST",
+          success: (data) => {
+            const obj = JSON.parse(data);
+            if (obj == 1) alert("YOU WIN!");
+            else alert("NOT THE WINNING BOARD YET!");
+          },
+          error: function (xhr, status, error) {
+            alert("Error!" + xhr.status);
+          },
+        });
+        // $.get(
+        //   `${CHECK_WIN_URL}playcard_token=${playerToken}`,
+        //   (data, status) => {
+        //     if (data == 1) {
+        //       alert("YOU WIN!");
+        //     } else {
+        //       alert("NOT YET");
+        //     }
+        //     console.log(data);
+        //   }
+        // );
+      });
+
+      $("#new-card-btn").click(() => {
+        inputCode = $("#game-code").val();
+        if (inputCode) {
+          getInputVal();
+        }
+      });
+
+      const getInputVal = () => {
+        // TODO FIX FETCH
+        $.ajax({
+          url: `http://www.hyeumine.com/getcard.php?bcode=${inputCode}`,
+          method: "POST",
+          success: (data) => {
+            const obj = JSON.parse(data);
+            if (obj == 0) {
+              alert("INVALID GAME CODE");
+            } else {
+              playerToken = obj.playcard_token;
+              generateBoard(obj.card);
+            }
+          },
+          error: function (xhr, status, error) {
+            alert("Error!" + xhr.status);
+          },
+        });
+        // $.get(
+        //   `http://www.hyeumine.com/getcard.php?bcode=${inputCode}`,
+        //   (data, status) => {
+        //     if (data == 0) alert("INVALID GAME CODE!");
+        //     else {
+        //       const JsonData = JSON.parse(data);
+        //       playerToken = JsonData.playcard_token;
+        //       generateBoard(JsonData.card);
+        //     }
+        //   }
+        // );
+      };
+
+      const generateBoard = (cells) => {
+        $("#bingo-title").css("display", "flex");
+        $("#card-btns-cont").css("display", "flex");
+        $("");
+
+        for (const key in cells) {
+          $(`.${key}`).html("");
+          const arrValues = cells[key];
+
+          for (const val of arrValues) {
+            // $(".cell").val(val);
+            $(`.${key}`).append(`<div class="cell">${val}</div>`);
+          }
+        }
+      };
+    });
+  </script>
+</html>
