@@ -1,0 +1,308 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+nav {
+  background-color: rgb(61, 61, 61);
+  height: 4rem;
+  display: flex;
+  align-items: center;
+}
+
+nav a {
+  color: rgb(238, 238, 238);
+  text-decoration: none;
+  padding: 1.1rem;
+  font-size: 1.5rem;
+}
+
+nav a:hover {
+  background-color: rgb(48, 48, 48);
+}
+
+#main {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+#greyBord {
+  display: flex;
+  border: 1px solid rgba(187, 187, 187, 0.589);
+  width: 50%;
+  height: 80%;
+  border-radius: 2px;
+  padding: 2rem;
+}
+
+#blackBord {
+  border: 1px solid rgb(41, 41, 41);
+  width: 100%;
+}
+
+#movesCont {
+  display: flex;
+  height: 7%;
+  justify-content: space-between;
+  border-bottom: 1px solid black;
+}
+
+.move {
+  width: 24.5%;
+  border: 1px solid rgba(0, 0, 0, 0.432);
+}
+
+.move:hover {
+  background-color: rgb(23, 182, 23);
+}
+
+#imgCont {
+  height: 93%;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+/* moves */
+.jumpActive {
+  position: relative;
+  left: 27%;
+}
+#jump:hover .jumpActive {
+  width: 46.5%;
+  height: 70.5%;
+  position: absolute;
+  animation: jumpMove 1s infinite;
+}
+
+@keyframes jumpMove {
+  0% {
+    background-image: url("./moves/jump-1.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 7rem;
+  }
+  28% {
+    background-image: url("./moves/jump-2.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 5rem;
+  }
+  42% {
+    background-image: url("./moves/jump-3.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 0rem;
+  }
+  56% {
+    background-image: url("./moves/jump-4.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: -5rem;
+  }
+  70% {
+    background-image: url("./moves/jump-5.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: -8rem;
+  }
+  84% {
+    background-image: url("./moves/jump-6.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 6rem;
+  }
+  100% {
+    background-image: url("./moves/jump-7.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 7rem;
+  }
+}
+
+.leftActive {
+  position: relative;
+  top: 5%;
+  left: 30%;
+}
+#left:hover .leftActive {
+  width: 46.5%;
+  height: 70.5%;
+  position: absolute;
+  animation: leftMove 1s infinite;
+}
+
+@keyframes leftMove {
+  0% {
+    background-image: url("./moves/left-1.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 30%;
+  }
+  25% {
+    background-image: url("./moves/left-2.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 25%;
+  }
+  50% {
+    background-image: url("./moves/left-3.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 20%;
+  }
+  75% {
+    background-image: url("./moves/left-4.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 15%;
+  }
+  100% {
+    background-image: url("./moves/left-5.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 10%;
+  }
+  0% {
+    background-image: url("./moves/left-1.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 30%;
+  }
+  25% {
+    background-image: url("./moves/left-2.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 25%;
+  }
+  50% {
+    background-image: url("./moves/left-3.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 20%;
+  }
+  75% {
+    background-image: url("./moves/left-4.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 15%;
+  }
+  100% {
+    background-image: url("./moves/left-5.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 10%;
+  }
+}
+
+.rightActive {
+  position: relative;
+  top: 5%;
+  left: 30%;
+}
+#right:hover .rightActive {
+  width: 46.5%;
+  height: 70.5%;
+  position: absolute;
+  animation: rightMove 1s infinite;
+}
+
+@keyframes rightMove {
+  0% {
+    background-image: url("./moves/right-1.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 30%;
+  }
+  28% {
+    background-image: url("./moves/right-2.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 35%;
+  }
+  42% {
+    background-image: url("./moves/right-3.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 40%;
+  }
+  56% {
+    background-image: url("./moves/right-4.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 45%;
+  }
+  100% {
+    background-image: url("./moves/right-5.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 13%;
+    left: 50%;
+  }
+}
+
+.dockActive {
+  position: relative;
+  top: 5%;
+  left: 30%;
+}
+#dock:hover .dockActive {
+  width: 46.5%;
+  height: 70.5%;
+  position: absolute;
+  animation: dockMove 1s infinite;
+}
+
+@keyframes dockMove {
+  0% {
+    background-image: url("./moves/dock-1.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 5%;
+    left: 30%;
+  }
+  25% {
+    background-image: url("./moves/dock-2.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 5%;
+    left: 30%;
+  }
+  50% {
+    background-image: url("./moves/dock-3.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 5%;
+    left: 30%;
+  }
+  75% {
+    background-image: url("./moves/dock-4.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 5%;
+    left: 30%;
+  }
+  100% {
+    background-image: url("./moves/dock-5.png");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    top: 5%;
+    left: 30%;
+  }
+}
