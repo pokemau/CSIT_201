@@ -1,0 +1,100 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+#main-cont {
+  /* background-color: orange; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+#input-cont {
+  margin: 2rem 0;
+}
+#input-cont label {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+#input-cont input {
+  font-size: 1rem;
+  height: 2rem;
+  padding: 1rem;
+}
+
+.ctrl-btn {
+  background-color: rgb(62, 144, 199);
+  border: none;
+  padding: 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.1s ease-in-out;
+  min-width: 15rem;
+  margin-bottom: 0.5rem;
+}
+.ctrl-btn:hover {
+  background-color: rgb(46, 119, 168);
+}
+
+.currnotes-h {
+  margin-top: 2rem;
+}
+.makenote-cont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#info-cont {
+  margin-bottom: 2rem;
+}
+#note-input {
+  font-size: 1rem;
+  height: 2rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+#notes-cont {
+  background-color: rgb(236, 236, 236);
+  width: 90%;
+  margin: auto;
+  padding: 0.5rem 2rem;
+  border-radius: 10px;
+}
+.user-note {
+  margin: 2rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: solid 1px rgb(211, 211, 211);
+}
+.user-note h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.user-note p {
+  font-size: 1rem;
+}
+
+.prev-user-cont {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0;
+  padding: 2rem;
+  border-radius: 10px;
+  background-color: rgb(216, 216, 216);
+}
+
+.prev-user-cont div {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+#old-id-input {
+  font-size: 1rem;
+  height: 2rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"></script>
+    <title>Slomm's Note</title>
+  </head>
+  <body>
+    <div id="main-cont">
+      <div id="input-cont">
+        <label>First Name: </label>
+        <input type="text" id="first-name-input" />
+
+        <label>Last Name: </label>
+        <input type="text" id="last-name-input" />
+      </div>
+      <button id="new-user-btn" class="ctrl-btn">CREATE NEW USER</button>
+
+      <button id="show-users-btn" class="ctrl-btn">SHOW PREVIOUS USERS</button>
+
+      <h1>USE PREVIOUS USER</h1>
+      <input type="text" id="old-id-input" />
+      <button id="use-old-user-btn" class="ctrl-btn">USE ID</button>
+
+      <div class="prevusers-list-cont"></div>
+    </div>
+  </body>
+
+  <script>
+    let currUser;
+
+    $(document).ready(() => {
+      // CREATE NEW USER
+      $("#new-user-btn").click(() => {
+        const firstName = $("#first-name-input").val();
+        const lastName = $("#last-name-input").val();
+
+        if (!firstName && !lastName) return;
+
+        createNewUser(firstName, lastName);
+      });
+
+      // SHOW USERS
+      $("#show-users-btn").click(() => {
+        const items = { ...localStorage };
+        $(".prevusers-list-cont").html("");
+        for (const item in items) {
+          if (item == "currUser") continue;
+
+          const curr = JSON.parse(localStorage.getItem(item));
+
+          $(".prevusers-list-cont").append(
+            `
+            <div class="prev-user-cont">
+              <div>${curr.id}</div>
+              <div>${curr.firstname}</div>
+              <div>${curr.lastname}</div>
+            </div>
+            `
+          );
+        }
+      });
+
+      // USE OLD ID
+      $("#use-old-user-btn").click(() => {
+        const oldIDVal = $("#old-id-input").val();
+
+        if (!oldIDVal) return;
+
+        localStorage.setItem("currUser", oldIDVal);
+        window.location.href = "makeNote.html";
+      });
+    });
+
+    const createNewUser = (firstName, lastName) => {
+      const NEW_USER_URL = "http://hyeumine.com/newuser.php";
+      $.ajax({
+        url: NEW_USER_URL,
+        method: "POST",
+        data: { firstname: firstName, lastname: lastName },
+        success: (data) => {
+          obj = JSON.parse(data);
+          fN = obj.firstname;
+          lN = obj.lastname;
+          id = obj.id;
+
+          newUser = { id: id, firstname: fN, lastname: lN };
+
+          localStorage.setItem("currUser", id);
+
+          localStorage.setItem(id, JSON.stringify(newUser));
+
+          window.location.href = "makeNote.html";
+        },
+      });
+    };
+  </script>
+</html>

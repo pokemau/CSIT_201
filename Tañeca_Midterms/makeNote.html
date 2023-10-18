@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="styles.css" />
+    <title>MAKE NOTE</title>
+  </head>
+  <body>
+    <div class="makenote-cont">
+      <div id="info-cont">
+        <h1 id="idH"></h1>
+        <h1 id="fNH"></h1>
+        <h1 id="lNH"></h1>
+      </div>
+
+      <input type="text" id="note-input" placeholder="Enter note here..." />
+      <button id="create-note-btn" class="ctrl-btn">CREATE NOTE</button>
+
+      <!-- <button id="show" class="ctrl-btn">SHOW</button> -->
+
+      <h1 class="currnotes-h">CURRENT NOTES</h1>
+      <div id="notes-cont"></div>
+    </div>
+  </body>
+
+  <script>
+    const notesList = [];
+    $(document).ready(() => {
+      const currId = localStorage.getItem("currUser");
+      const currUser = JSON.parse(localStorage.getItem(currId));
+
+      console.log(currUser);
+
+      $("#idH").val(" ");
+      $("#fNH").val(" ");
+      $("#lNH").val(" ");
+
+      $("#idH").append("Current ID: " + currId);
+      $("#fNH").append("First Name: " + currUser.firstname);
+      $("#lNH").append("Last Name: " + currUser.lastname);
+
+      // CREATE NOTE
+      $("#create-note-btn").click(() => {
+        const noteInputVal = $("#note-input").val();
+
+        if (!noteInputVal) return;
+
+        createNewNote(currId, noteInputVal);
+      });
+
+      // FETCH CURR USER NOTES
+      $("#show").click(() => {
+        const GET_NOTES_URL = "http://hyeumine.com/mynotes.php";
+
+        $.ajax({
+          url: GET_NOTES_URL,
+          method: "GET",
+          data: { id: currId },
+          success: (data) => {
+            obj = JSON.parse(data);
+
+            obj.notes.forEach((note) => {
+              $("#notes-cont").append(
+                `<div class="user-note">
+                  <h1>${note[0]}</h1>
+                  <p>${note[1]}</p>
+                </div>`
+              );
+            });
+
+            console.log(obj);
+          },
+        });
+
+        notesList.forEach((note) => {
+          console.log(note);
+        });
+      });
+
+      // USER FUNCTIONS
+      const createNewNote = (id, noteInputVal) => {
+        const NEW_NOTE_URL = "http://hyeumine.com/newnote.php";
+        const GET_NOTES_URL = "http://hyeumine.com/mynotes.php";
+
+        $.ajax({
+          url: NEW_NOTE_URL,
+          method: "POST",
+          data: { id: id, note: noteInputVal },
+          success: () => {
+            $.ajax({
+              url: GET_NOTES_URL,
+              method: "GET",
+              data: { id: currId },
+              success: (data) => {
+                obj = JSON.parse(data);
+                $("#note-input").val("");
+
+                $("#notes-cont").html("");
+                obj.notes.forEach((note) => {
+                  $("#notes-cont").append(
+                    `<div class="user-note">
+                  <h1>${note[0]}</h1>
+                  <p>${note[1]}</p>
+                </div>`
+                  );
+                });
+
+                console.log(obj);
+              },
+            });
+          },
+        });
+      };
+    });
+  </script>
+</html>
