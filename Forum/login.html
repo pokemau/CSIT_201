@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="styles.css" />
+    <title>Login</title>
+  </head>
+  <body>
+    <div>
+      <div>
+        <label>First Name</label>
+        <input type="text" id="fn-input" />
+
+        <label>Last Name</label>
+        <input type="text" id="ln-input" />
+      </div>
+
+      <button class="create-user-btn">Create User</button>
+    </div>
+  </body>
+
+  <script>
+    $(document).ready(() => {
+      $(".create-user-btn").click(() => {
+        const firstName = $("#fn-input").val();
+        const lastName = $("#ln-input").val();
+
+        if (!(firstName && lastName)) return;
+
+        createUser(firstName, lastName);
+      });
+    });
+
+    const createUser = (firstName, lastName) => {
+      const CREATE_USER_URL = `http://hyeumine.com/forumCreateUser.php`;
+
+      $.post(
+        CREATE_USER_URL,
+        {
+          firstname: firstName,
+          lastname: lastName,
+        },
+        (data, success) => {
+          if (success === "success") {
+            obj = JSON.parse(data);
+
+            console.log(obj);
+          }
+        }
+      );
+    };
+  </script>
+</html>
