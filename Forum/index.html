@@ -18,16 +18,66 @@
     <div class="main-cont">
       <h1>ALL POSTS</h1>
 
+      <label>Post</label>
+      <input type="text" id="post-input" />
+      <button id="new-post-btn" class="ctrl-btn">CREATE NEW POST</button>
+
+      <div class="flex gap-2">
+        <button id="prev-btn">PREV</button>
+        <p id="page-num">1</p>
+        <button id="next-btn">NEXT</button>
+      </div>
+
       <div class="posts-cont"></div>
     </div>
   </body>
 
   <script>
+    let globalPage = 1;
+    const currUser = JSON.parse(localStorage.getItem("currUser"));
+
     $(document).ready(function () {
-      getPosts();
+      setLoggedState();
+
+      getPosts(globalPage);
+
+      $("#next-btn").click(() => {
+        getPosts(++globalPage);
+        $("#page-num").text(globalPage);
+      });
+
+      $("#prev-btn").click(() => {
+        if (globalPage > 1) getPosts(--globalPage);
+        $("#page-num").text(globalPage);
+      });
+
+      $("#new-post-btn").click(() => {
+        const postText = $("#post-input").val();
+        if (!postText) return;
+
+        createPost(postText, currUser);
+      });
     });
 
-    const getPosts = (page = 1) => {
+    const createPost = (text, user) => {
+      const CREATE_POST_URL = `http://hyeumine.com/forumNewPost.php`;
+      $.post(
+        CREATE_POST_URL,
+        {
+          id: user.id,
+          post: text,
+        },
+        (data) => {
+          obj = JSON.parse(data);
+          if (obj.success) {
+            getPosts(globalPage);
+            $("#post-input").val("");
+          }
+        }
+      );
+    };
+
+    const getPosts = (page) => {
       const ALL_POSTS_URL = `http://hyeumine.com/forumGetPosts.php?page=${page}`;
 
       $(".posts-cont").html("");
@@ -35,6 +85,8 @@
       $.get(ALL_POSTS_URL, (data, status) => {
         if (status === "success") {
           posts = JSON.parse(data);
+
+          console.log(posts);
 
           posts.forEach((post) => {
             $(".posts-cont").append(`
@@ -47,6 +99,13 @@
           });
         }
       });
+    };
+
+    const setLoggedState = () => {
+      let loggedState = localStorage.getItem("loggedIn");
+      if (!loggedState) localStorage.setItem("loggedIn", "false");
+      loggedState = localStorage.getItem("loggedIn");
+      if (loggedState == "false") window.location.href = "login.html";
     };
   </script>
 </html>

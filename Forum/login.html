@@ -16,43 +16,76 @@
   <body>
     <div>
       <div>
-        <label>First Name</label>
-        <input type="text" id="fn-input" />
-
-        <label>Last Name</label>
-        <input type="text" id="ln-input" />
+        <label>Username: </label>
+        <input type="text" id="username-input" />
       </div>
 
-      <button class="create-user-btn">Create User</button>
+      <button id="create-user-btn" class="ctrl-btn">Create User</button>
+      <button id="login-user-btn" class="ctrl-btn">Log In</button>
     </div>
   </body>
 
   <script>
     $(document).ready(() => {
-      $(".create-user-btn").click(() => {
-        const firstName = $("#fn-input").val();
-        const lastName = $("#ln-input").val();
+      $("#create-user-btn").click(() => {
+        const userName = $("#username-input").val();
 
-        if (!(firstName && lastName)) return;
+        if (!userName) return;
 
-        createUser(firstName, lastName);
+        createUser(userName);
+      });
+
+      $("#login-user-btn").click(() => {
+        const userName = $("#username-input").val();
+
+        if (!userName) return;
+
+        loginUser(userName);
       });
     });
 
-    const createUser = (firstName, lastName) => {
+    const createUser = (userName) => {
       const CREATE_USER_URL = `http://hyeumine.com/forumCreateUser.php`;
 
       $.post(
         CREATE_USER_URL,
         {
-          firstname: firstName,
-          lastname: lastName,
+          username: userName,
         },
         (data, success) => {
           if (success === "success") {
             obj = JSON.parse(data);
 
             console.log(obj);
+
+            localStorage.setItem("currUser", JSON.stringify(obj));
+            localStorage.setItem("loggedIn", "true");
+            $("#username-input").val("");
+          }
+        }
+      );
+    };
+
+    const loginUser = (userName) => {
+      const LOGIN_URL = `http://hyeumine.com/forumLogin.php`;
+
+      $.post(
+        LOGIN_URL,
+        {
+          username: userName,
+        },
+        (data) => {
+          obj = JSON.parse(data);
+
+          if (obj.success) {
+            console.log(obj);
+
+            localStorage.setItem("currUser", JSON.stringify(obj.user));
+            localStorage.setItem("loggedIn", "true");
+
+            window.location.href = "index.html";
+          } else {
+            console.log("invalid user");
           }
         }
       );
