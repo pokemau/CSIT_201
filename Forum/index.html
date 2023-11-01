@@ -9,45 +9,96 @@
       crossorigin="anonymous"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://kit.fontawesome.com/d73f65124a.js"
+      crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="styles.css" />
 
     <title>Forum</title>
   </head>
   <body>
+    <!-- -------------------- TESTING ------------------------>
+    <!-- <div class="post" id="${post.id}">
+      <div class="mb-2">
+        <h1 class="font-bold text-xl">new user</h1>
+        <p class="text-[#8b8b8b] text-sm">2023-10-31 07:58:59</p>
+      </div>
+      <p>
+        As a newcomer to this platform, I am still getting acquainted with how
+        things work and navigating my way around the features and
+        functionalities.
+      </p>
+      <div class="flex gap-4 justify-center mt-4 text-sm font-medium">
+        <button
+          class="${ post.id } hover:text-[#6e6e6e]"
+          onclick="commentPost(this)">
+          COMMENT
+        </button>
+        <span class="flex items-center justify-center">|</span>
+        <button
+          class="${ post.id } hover:text-[#6e6e6e]"
+          onclick="deletePost(this)">
+          DELETE POST
+        </button>
+      </div>
+    </div> -->
+
+    <div class="modal">
+      <div class="modal-content"></div>
+    </div>
+
     <div class="main-cont">
       <h1>ALL POSTS</h1>
 
       <label>Post</label>
       <input type="text" id="post-input" />
-      <button id="new-post-btn" class="ctrl-btn">CREATE NEW POST</button>
-
-      <div class="flex gap-2">
-        <button id="prev-btn">PREV</button>
-        <p id="page-num">1</p>
-        <button id="next-btn">NEXT</button>
-      </div>
+      <button id="new-post-btn" class="ctrl-btn" onclick="">
+        CREATE NEW POST
+      </button>
 
       <div class="posts-cont"></div>
+
+      <div class="flex gap-2 justify-center font-medium my-4">
+        <button id="prev-btn" class="hover:text-[#6e6e6e]">PREV</button>
+        <span>|</span>
+        <div class="min-w-[18px] text-center">
+          <p id="page-num" class="bold">1</p>
+        </div>
+        <span>|</span>
+        <button id="next-btn" class="hover:text-[#6e6e6e]">NEXT</button>
+      </div>
     </div>
   </body>
 
   <script>
     let globalPage = 1;
     const currUser = JSON.parse(localStorage.getItem("currUser"));
+    let globalPageData = {};
+    let globalPostData;
 
-    $(document).ready(function () {
+    $(document).ready(() => {
       setLoggedState();
 
-      getPosts(globalPage);
+      showPosts();
 
-      $("#next-btn").click(() => {
-        getPosts(++globalPage);
+      $("#next-btn").click(async () => {
+        const posts = await getPosts(++globalPage);
+        if (!posts.length) {
+          --globalPage;
+          return;
+        }
+
+        showPosts(posts);
         $("#page-num").text(globalPage);
       });
 
-      $("#prev-btn").click(() => {
-        if (globalPage > 1) getPosts(--globalPage);
+      $("#prev-btn").click(async () => {
+        if (globalPage > 1) {
+          const posts = await getPosts(--globalPage);
+
+          showPosts(posts);
+        }
         $("#page-num").text(globalPage);
       });
 
@@ -56,6 +107,16 @@
         if (!postText) return;
 
         createPost(postText, currUser);
+      });
+
+      $("#comment-input").on("input", function () {
+        this.style.height = "auto";
+
+        this.style.height = this.scrollHeight + "px";
+      });
+
+      $(window).click((e) => {
+        if (e.target.className === "modal") $(".modal").css("display", "none");
       });
     });
 
@@ -80,25 +141,69 @@
     const getPosts = (page) => {
       const ALL_POSTS_URL = `http://hyeumine.com/forumGetPosts.php?page=${page}`;
 
+      return new Promise((resolve, reject) => {
+        $.get(ALL_POSTS_URL, (data, status) => {
+          if (status === "success") {
+            posts = JSON.parse(data);
+
+            globalPageData = { ...posts };
+
+            resolve(posts);
+          }
+        });
+      });
+    };
+
+    const showPosts = async () => {
+      const posts = await getPosts(globalPage);
+
       $(".posts-cont").html("");
 
-      $.get(ALL_POSTS_URL, (data, status) => {
-        if (status === "success") {
-          posts = JSON.parse(data);
-
-          console.log(posts);
-
-          posts.forEach((post) => {
-            $(".posts-cont").append(`
-              <div class="post">
-                <h1 class="font-bold text-xl">${post.user}</h1>
-                <p>${post.date}</p>
-                <p>${post.post}</p>
-              </div>
-            `);
-          });
-        }
+      posts.forEach((post) => {
+        $(".posts-cont").append(`
+          <div class="post" id="${post.id}">
+            <div class="mb-2">
+              <h1 class="font-bold text-lg">${post.user || "..."}</h1>
+              <p class="text-[#8b8b8b] text-xs">${post.date || "..."}</p>
+            </div>
+            <p class="text-md">
+              ${post.post || "..."}
+            </p>
+            <div class="flex gap-4 mt-4 text-sm font-medium">
+              <button
+                class="${post.id} hover:text-[#6e6e6e]"
+                onclick="commentPost(this)">
+                <i class="fa-solid fa-comment"></i>
+                <span class="ml-[2px]">Comment</span></button>
+              <span class="flex items-center justify-center">|</span>
+              <button
+                class="${post.id} hover:text-[#6e6e6e]"
+                onclick="deletePost(this)">
+                <i class="fa-solid fa-trash"></i>
+                <span class="ml-[2px]">Delete</span></button>
+            </div>
+          </div>
+        `);
       });
+    };
+
+    const deletePost = (e) => {
+      const DELETE_POST_URL = `http://hyeumine.com/forumDeletePost.php`;
+      const postId = e.className.split(" ")[0];
+
+      $.get(
+        DELETE_POST_URL,
+        {
+          id: postId,
+        },
+        (data) => {
+          obj = JSON.parse(data);
+          if (obj.success) {
+            getPosts(globalPage);
+            showPosts();
+          }
+        }
+      );
     };
 
     const setLoggedState = () => {
@@ -106,6 +211,132 @@
       if (!loggedState) localStorage.setItem("loggedIn", "false");
       loggedState = localStorage.getItem("loggedIn");
       if (loggedState == "false") window.location.href = "login.html";
+    };
+
+    const getComments = async (postId) => {
+      const newPosts = await getPosts(globalPage);
+
+      for (const key in newPosts) {
+        if (newPosts[key].id == postId) {
+          console.log(newPosts[key]);
+          globalPostData = newPosts[key];
+          return newPosts[key];
+        }
+      }
+    };
+
+    const commentPost = async (e) => {
+      const postId = parseInt(e.className.split(" ")[0]);
+
+      const currUser = $(`#${postId} > .mb-2 h1`)[0].textContent;
+      const currDate = $(`#${postId} > .mb-2 p`)[0].textContent;
+      const currPost = $(`#${postId} > p`)[0].textContent;
+
+      $(".modal-content").html("");
+
+      $(".modal-content").append(`
+        <div class="post">
+          <div class="mb-2">
+            <h1 class="font-bold text-lg">${currUser || "..."}</h1>
+            <p class="text-[#8b8b8b] text-xs">${currDate || "..."}</p>
+          </div>
+          <p class="text-md">
+            ${currPost || "..."}
+          </p>
+        </div>
+
+        <div class="post">
+          <textarea
+            placeholder="Your comment..."
+            maxlength="200"
+            id="comment-input"
+            class="w-full resize-none h-auto p-2 focus:outline-none"></textarea>
+
+          <button class="hover:text-[#6e6e6e] text-sm my-2 font-medium text-center" onclick="sendComment(this)"><i class="fa-solid fa-paper-plane"></i> <span class="ml-[2px]">Send</span></button>
+
+          <div class="comments-cont border-t-[1px] border-[#aaaaaa]"></div>
+        </div>
+      `);
+
+      $(".modal").css("display", "block");
+
+      const currPostData = await getComments(postId);
+      showPostComments(currPostData);
+    };
+
+    const showPostComments = (currPostData) => {
+      const currPostComments = currPostData.reply || null;
+
+      if (currPostComments) {
+        $(".comments-cont").html("");
+
+        currPostComments.forEach((postComment) => {
+          $(".comments-cont").append(`
+          <div class="border-b-[1px] border-[#aaaaaa] px-[5px] indiv-comment">
+            <div class="mb-2">
+              <h1 class="font-bold text-lg">${postComment.user || "..."}</h1>
+              <p class="text-[#8b8b8b] text-xs">${postComment.date || "..."}</p>
+            </div>
+            <p class="text-md">
+              ${postComment.reply || "..."}
+            </p>
+
+            <button
+              class="${postComment.id} hover:text-[#6e6e6e] absolute top-[10%] 
+              right-[1%] text-sm font-medium"
+              onclick="deleteComment(this)">
+              <i class="fa-solid fa-trash"></i>
+              <span class="ml-[2px]">Delete</span>
+            </button>
+          </div>
+
+          `);
+        });
+      }
+    };
+
+    const sendComment = (e) => {
+      const commentText = $("#comment-input").val();
+      const COMMENT_POST_URL = `http://hyeumine.com/forumReplyPost.php`;
+
+      if (!commentText) return;
+
+      $.post(
+        COMMENT_POST_URL,
+        {
+          user_id: currUser.id,
+          post_id: globalPostData.id,
+          reply: commentText,
+        },
+        async (res) => {
+          obj = JSON.parse(res);
+          if (obj.success) {
+            const currPostData = await getComments(globalPostData.id);
+
+            $("#comment-input").val("");
+            showPostComments(currPostData);
+          }
+        }
+      );
+    };
+
+    const deleteComment = (e) => {
+      const postId = parseInt(e.className.split(" ")[0]);
+      const DELETE_REPLY_URL = `http://hyeumine.com/forumDeleteReply.php`;
+
+      $.get(
+        DELETE_REPLY_URL,
+        {
+          id: postId,
+        },
+        async (res) => {
+          obj = JSON.parse(res);
+          if (obj.success) {
+            const currPostData = await getComments(globalPostData.id);
+            showPostComments(currPostData);
+          }
+        }
+      );
     };
   </script>
 </html>
