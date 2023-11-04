@@ -18,48 +18,31 @@
     <title>Forum</title>
   </head>
   <body>
-    <!-- -------------------- TESTING ------------------------>
-    <!-- <div class="post" id="${post.id}">
-      <div class="mb-2">
-        <h1 class="font-bold text-xl">new user</h1>
-        <p class="text-[#8b8b8b] text-sm">2023-10-31 07:58:59</p>
-      </div>
-      <p>
-        As a newcomer to this platform, I am still getting acquainted with how
-        things work and navigating my way around the features and
-        functionalities.
-      </p>
-      <div class="flex gap-4 justify-center mt-4 text-sm font-medium">
-        <button
-          class="${ post.id } hover:text-[#6e6e6e]"
-          onclick="commentPost(this)">
-          COMMENT
-        </button>
-        <span class="flex items-center justify-center">|</span>
-        <button
-          class="${ post.id } hover:text-[#6e6e6e]"
-          onclick="deletePost(this)">
-          DELETE POST
-        </button>
-      </div>
-    </div> -->
-
     <div class="modal">
-      <div class="modal-content"></div>
+      <div class="modal-content">
+        <!-- TEST -->
+
+        <!-- TEST -->
+      </div>
     </div>
 
+    <nav
+      class="border-b-[2px] border-[#c9c9c9] py-2 px-4 flex justify-between items-center">
+      <div class="cursor-pointer">
+        <p class="text-lg font-medium">Hey,</p>
+        <h1 class="font-bold text-[1.8rem]" onclick="location.reload();"></h1>
+      </div>
+
+      <div>
+        <button class="ctrl-btn" onclick="logoutUser()">Logout</button>
+        <button class="ctrl-btn" onclick="showNewPostModal()">New Post</button>
+      </div>
+    </nav>
+
     <div class="main-cont">
-      <h1>ALL POSTS</h1>
-
-      <label>Post</label>
-      <input type="text" id="post-input" />
-      <button id="new-post-btn" class="ctrl-btn" onclick="">
-        CREATE NEW POST
-      </button>
-
       <div class="posts-cont"></div>
 
-      <div class="flex gap-2 justify-center font-medium my-4">
+      <div class="flex gap-2 justify-center font-medium my-4 no-select">
         <button id="prev-btn" class="hover:text-[#6e6e6e]">PREV</button>
         <span>|</span>
         <div class="min-w-[18px] text-center">
@@ -78,8 +61,11 @@
     let globalPostData;
 
     $(document).ready(() => {
-      setLoggedState();
+      if (!currUser) window.location.href = "login.html";
 
+      $("nav > div > h1").text(currUser.username);
+
+      setLoggedState();
       showPosts();
 
       $("#next-btn").click(async () => {
@@ -102,7 +88,7 @@
         $("#page-num").text(globalPage);
       });
 
-      $("#new-post-btn").click(() => {
+      $(document).on("click", "#new-post-btn", () => {
         const postText = $("#post-input").val();
         if (!postText) return;
 
@@ -120,6 +106,28 @@
       });
     });
 
+    const showNewPostModal = () => {
+      $(".modal-content").html("");
+
+      $(".modal-content").append(`
+        <div class="flex flex-col mx-auto my-4 w-[70%] h-full">
+          <textarea
+            placeholder="Your post here..."
+            maxlength="250"
+            id="post-input"
+            class="w-full resize-none h-auto p-2 focus:outline-none border-2 my-2"></textarea>
+          <button id="new-post-btn" class="ctrl-btn">CREATE NEW POST</button>
+        </div>
+      `);
+
+      $(".modal").css("display", "block");
+    };
+
+    const logoutUser = () => {
+      localStorage.clear();
+      window.location.href = "login.html";
+    };
+
     const createPost = (text, user) => {
       const CREATE_POST_URL = `http://hyeumine.com/forumNewPost.php`;
       $.post(
@@ -132,7 +140,10 @@
           obj = JSON.parse(data);
           if (obj.success) {
             getPosts(globalPage);
+            showPosts();
             $("#post-input").val("");
+
+            $(".modal").css("display", "none");
           }
         }
       );
@@ -248,13 +259,13 @@
         <div class="post">
           <textarea
             placeholder="Your comment..."
-            maxlength="200"
+            maxlength="250"
             id="comment-input"
             class="w-full resize-none h-auto p-2 focus:outline-none"></textarea>
 
           <button class="hover:text-[#6e6e6e] text-sm my-2 font-medium text-center" onclick="sendComment(this)"><i class="fa-solid fa-paper-plane"></i> <span class="ml-[2px]">Send</span></button>
 
-          <div class="comments-cont border-t-[1px] border-[#aaaaaa]"></div>
+          <div class="comments-cont border-t-[1px] border-[#aaaaaa] min-h-[3rem]"></div>
         </div>
       `);
 
