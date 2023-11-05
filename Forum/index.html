@@ -27,7 +27,7 @@
     </div>
 
     <nav
-      class="border-b-[2px] border-[#c9c9c9] py-2 px-4 flex justify-between items-center">
+      class="w-[100vw] bg-[#f7f7f7] border-b-[2px] border-[#c9c9c9] py-2 px-4 flex justify-between items-center fixed top-0">
       <div class="cursor-pointer">
         <p class="text-lg font-medium">Hey,</p>
         <h1 class="font-bold text-[1.8rem]" onclick="location.reload();"></h1>
@@ -39,18 +39,16 @@
       </div>
     </nav>
 
-    <div class="main-cont">
-      <div class="posts-cont"></div>
+    <div class="posts-cont mt-[6rem]"></div>
 
-      <div class="flex gap-2 justify-center font-medium my-4 no-select">
-        <button id="prev-btn" class="hover:text-[#6e6e6e]">PREV</button>
-        <span>|</span>
-        <div class="min-w-[18px] text-center">
-          <p id="page-num" class="bold">1</p>
-        </div>
-        <span>|</span>
-        <button id="next-btn" class="hover:text-[#6e6e6e]">NEXT</button>
+    <div class="flex gap-2 justify-center font-medium my-4 no-select">
+      <button id="prev-btn" class="hover:text-[#6e6e6e]">PREV</button>
+      <span>|</span>
+      <div class="min-w-[18px] text-center">
+        <p id="page-num" class="bold">1</p>
       </div>
+      <span>|</span>
+      <button id="next-btn" class="hover:text-[#6e6e6e]">NEXT</button>
     </div>
   </body>
 
